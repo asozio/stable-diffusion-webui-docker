@@ -12,13 +12,13 @@ x-base_service: &base_service
     deploy:
       resources:
         limits:
-          cpus: '3.0'
+          cpus: '4.0'
           memory: 16G
         reservations:
           devices:
               - driver: nvidia
                 device_ids: ['0']
-                capabilities: [compute, utility]
+                capabilities: [all,capabilities=utility]
 
 name: webui-docker
 
