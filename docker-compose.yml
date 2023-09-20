@@ -18,7 +18,7 @@ x-base_service: &base_service
           devices:
               - driver: nvidia
                 device_ids: ['0']
-                capabilities: [all,capabilities=utility]
+                capabilities: [all,utility]
 
 name: webui-docker
 
