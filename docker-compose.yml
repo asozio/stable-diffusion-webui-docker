@@ -1,38 +1,34 @@
-#Based on https://github.com/AbdBarho/stable-diffusion-webui-docker
-
 version: '3.9'
 
 x-base_service: &base_service
     ports:
-      - "7860:7860"
+      - "${WEBUI_PORT:-7860}:7860"
     volumes:
       - &v1 ./data:/data
       - &v2 ./output:/output
-    stop_signal: SIGINT
+    stop_signal: SIGKILL
+    tty: true
     deploy:
       resources:
-        limits:
-          cpus: '4.0'
-          memory: 16G
         reservations:
           devices:
               - driver: nvidia
-                count: all
-                capabilities: [gpu]
+                device_ids: ['0']
+                capabilities: [compute, utility]
 
 name: webui-docker
 
 services:
 #  download:
 #    build: ./services/download/
+#    profiles: ["download"]
 #    volumes:
 #      - *v1
 
   auto: &automatic
     <<: *base_service
+#    profiles: ["auto"]
     build: ./services/AUTOMATIC1111
-    image: sd-auto:58
+    image: sd-auto:67
     environment:
-      - CLI_ARGS=--allow-code --xformers --enable-insecure-extension-access --api --theme dark --enable-console-prompts --gradio-img2img-tool color-sketch --update-check --no-half-vae --opt-sdp-attention	
-#      - CLI_ARGS=--allow-code --medvram --xformers --enable-insecure-extension-access --api
-
+      - CLI_ARGS=--allow-code --medvram --xformers --enable-insecure-extension-access --api
